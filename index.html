@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Normativa de Grados Nihon Tai Jitsu 2025</title>
+    
+    <!-- Librerías de PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <style>
+        /* RESET & BASE CSS NATIVO */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: #f4f4f5;
+            color: #18181b;
+            line-height: 1.5;
+            padding: env(safe-area-inset-top, 20px) env(safe-area-inset-right, 15px) env(safe-area-inset-bottom, 20px) env(safe-area-inset-left, 15px);
+            -webkit-text-size-adjust: 100%;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            padding: 20px;
+            margin-top: 15px;
+            margin-bottom: 20px;
+        }
+
+        /* HEADER */
+        .header { 
+            display: flex; 
+            justify-content: space-between; 
+            flex-wrap: wrap; 
+            align-items: flex-start; 
+            gap: 20px; 
+            border-bottom: 2px solid #e4e4e7;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .header-left {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+            flex: 1 1 300px;
+        }
+
+        .header-title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #09090b;
+            line-height: 1.1;
+        }
+
+        .header-subtitle {
+            font-size: 0.9rem;
+            color: #52525b;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .btn-pdf {
+            background-color: #09090b;
+            color: #ffffff;
+            border: none;
+            padding: 10px 16px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+            appearance: none;
+        }
+
+        .btn-pdf:active {
+            background-color: #27272a;
+        }
+
+        .btn-alt {
+            background-color: #f4f4f5;
+            color: #09090b;
+            border: 1px solid #d4d4d8;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-alt:active {
+            background-color: #e4e4e7;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 5px;
+        }
+
+        .header-right { 
+            display: flex; 
+            flex-direction: row; 
+            gap: 15px; 
+            align-items: center; 
+            flex-wrap: wrap;
+        }
+
+        .header-right img {
+            max-height: 55px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        /* NAVEGACIÓN EN 2 FILAS */
+        .nav-container {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 25px;
+            width: 100%;
+        }
+
+        .nav-row {
+            display: flex;
+            width: 100%;
+            gap: 6px;
+        }
+
+        .nav-btn {
+            flex: 1 1 0;
+            min-width: 0;
+            background-color: #f4f4f5;
+            border: 1px solid #d4d4d8;
+            color: #52525b;
+            font-weight: 700;
+            font-size: clamp(10px, 2.5vw, 13px);
+            padding: 10px 4px;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: center;
+            line-height: 1.2;
+            appearance: none;
+        }
+
+        .nav-btn.active {
+            background-color: #09090b;
+            color: #ffffff;
+            border-color: #09090b;
+        }
+
+        /* TARJETAS Y CONTENIDO */
+        .grade-title {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #09090b;
+            margin-bottom: 15px;
+            border-bottom: 3px solid #09090b;
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        .admin-card {
+            background-color: #fffbeb;
+            border: 1px solid #fde68a;
+            border-left: 5px solid #f59e0b;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .admin-title {
+            font-size: 1rem;
+            font-weight: 800;
+            color: #92400e;
+            text-transform: uppercase;
+            margin-bottom: 0;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+
+        .toggle-arrow {
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+        }
+
+        .admin-content {
+            font-size: 0.95rem;
+            color: #451a03;
+            display: none;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px dashed #fcd34d;
+        }
+
+        .admin-card.open .admin-content {
+            display: block;
+        }
+
+        .admin-card.open .toggle-arrow {
+            transform: rotate(180deg);
+        }
+
+        .section-block {
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            font-size: 1rem;
+            font-weight: 800;
+            color: #27272a;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        /* REGLA ESTRICTA: SIN NEGRITAS */
+        .fw-normal, .fw-normal * {
+            font-weight: normal !important;
+            font-style: normal !important;
+            color: #18181b;
+            font-size: 0.95rem;
+        }
+
+        ul.content-list {
+            padding-left: 20px;
+            margin-top: 5px;
+        }
+        ul.content-list li {
+            margin-bottom: 4px;
+        }
+
+        /* MODALES */
+        .modal-overlay {
+            position: fixed; 
+            inset: 0; 
+            z-index: 9999; 
+            background: rgba(0,0,0,0.6); 
+            display: none !important;
+            align-items: center; 
+            justify-content: center;
+        }
+
+        .modal-card {
+            background: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .modal-btn-full {
+            display: block;
+            width: 100%;
+            background: #09090b;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            cursor: pointer;
+            appearance: none;
+        }
+
+        .modal-btn-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            color: #71717a;
+            appearance: none;
+        }
+
+        .modal-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .modal-grid button {
+            background: #f4f4f5;
+            border: 1px solid #d4d4d8;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: #52525b;
+            appearance: none;
+        }
+
+        /* AVISO LEGAL */
+        .disclaimer-box {
+            background-color: #fef2f2;
+            border: 1px solid #fca5a5;
+            border-left: 5px solid #ef4444;
+            color: #7f1d1d;
+            padding: 12px 15px;
+            border-radius: 4px;
+            margin-bottom: 25px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+
+<!-- MODAL DE PDF -->
+<div id="pdfModal" class="modal-overlay">
+    <div class="modal-card">
+        <button class="modal-btn-close" onclick="closeModal()">×</button>
+        <h3 style="margin-bottom: 15px; font-size: 1.2rem; font-weight: bold;">Descargar PDF HD</h3>
+        <button class="modal-btn-full" onclick="generatePDF('all')">Programa Completo (8 Pág.)</button>
+        <div style="font-size: 0.85rem; margin-bottom: 8px; font-weight: bold; text-transform: uppercase; color:#18181b;">Grado Individual (1 Pág.):</div>
+        <div class="modal-grid" id="modalButtonsGrid"></div>
+    </div>
+</div>
+
+<!-- OVERLAY DE CARGA PDF -->
+<div id="loaderOverlay" style="position: fixed; inset: 0; z-index: 10000; background: rgba(0,0,0,0.85); display: none !important; align-items: center; justify-content: center; flex-direction: column; color: white;">
+    <div style="font-size: 1.5rem; font-weight: bold; margin-bottom: 10px;">Generando Documento...</div>
+    <div id="loaderText" style="font-size: 1rem;">Preparando páginas</div>
+</div>
+
+<div class="container">
+    <header class="header">
+        <div class="header-left">
+            <h1 class="header-title">NIHON TAI JITSU</h1>
+            <h2 class="header-subtitle">Normativa de Grados 2025 — Resumen Oficial</h2>
+            <div class="header-buttons">
+                <button class="btn-pdf" onclick="openModal()">Descargar Resumen PDF</button>
+                <a href="https://rfek.es/wp-content/uploads/2024/03/NTJ-NORMATIVA-DE-EXAMEN-DE-CN-2025.pdf" target="_blank" rel="noopener noreferrer" class="btn-pdf btn-alt">
+                    Ver Normativa Oficial 2025
+                </a>
+            </div>
+        </div>
+        <div class="header-right">
+            <!-- USO DE PROXY WSRV.NL PARA EVITAR BLOQUEO DE WEBKIT EN IPADOS/IOS -->
+            <img crossorigin="anonymous" src="https://wsrv.nl/?url=raw.githubusercontent.com/asturiasdiweb-wq/imagenes-programa-tecnico/main/logo-ntj.jpg" alt="NTJ" onerror="this.style.display='none';">
+            <img crossorigin="anonymous" src="https://wsrv.nl/?url=raw.githubusercontent.com/asturiasdiweb-wq/imagenes-programa-tecnico/main/logo-rfek.jpg" alt="RFEK" onerror="this.style.display='none';">
+            <img crossorigin="anonymous" src="https://wsrv.nl/?url=raw.githubusercontent.com/asturiasdiweb-wq/imagenes-programa-tecnico/main/CSD%202026.JPG.jpeg" alt="CSD" onerror="this.style.display='none';">
+        </div>
+    </header>
+
+    <div class="disclaimer-box">
+        <strong>⚠️ IMPORTANTE:</strong> Este documento es un resumen orientativo de la <strong>Normativa de Examen de Cinturón Negro - 2025</strong> para los grados de C.N. hasta 7º Dan. Este resumen <strong>no sustituye a la normativa oficial</strong> y, para conocer en detalle los requisitos de cada grado, debe consultarse el documento íntegro. Ante cualquier discrepancia, la Normativa Oficial de la RFEK es siempre el documento que prevalece.
+    </div>
+
+    <nav class="nav-container">
+        <!-- Fila 1: 5 Botones -->
+        <div class="nav-row" id="navRow1"></div>
+        <!-- Fila 2: 4 Botones -->
+        <div class="nav-row" id="navRow2"></div>
+    </nav>
+
+    <main id="mainContent"></main>
+</div>
+
+<script>
+    const baseDocs = [
+        'Fotocopia DNI.',
+        'Fotocopia Carnet de Grados.',
+        'Fotografía.',
+        'Solicitud de examen correctamente cumplimentada.',
+        'Abonar la cuota de examen.'
+    ];
+
+    const baseDocsAval = [
+        'Fotocopia DNI.',
+        'Fotocopia Carnet de Grados.',
+        'Fotografía.',
+        'Solicitud de examen correctamente cumplimentada. Es necesario AVAL.',
+        'Abonar la cuota de examen.'
+    ];
+
+    const GRADES = [
+        {
+            id: 'cn', short: 'C. Negro', title: 'GRADO: CINTURÓN NEGRO', isSenior: false,
+            admin: { edad: '12 años.', licencias: '4 consecutivas ó 5 alternas y licencia del año en curso.', gradoMinimo: '1 año de marrón.', docs: baseDocsAval },
+            teoria: '3 preguntas, 1 sobre cada bloque (Fundamentos / Historia / Nomenclatura).',
+            kihonWaza: { main: 'Kihon Waza (por la derecha):', items: ['Trabajo libre de 8 técnicas simples (Ataque + Tai Sabaki + 1 técnica).', 'Técnicas de Atemi o Proyección (4 de cada).', 'Deben contener los 8 Tai Sabakis de base.', 'UKE atacará de atemi.', 'Se puede repetir el ataque pero NO las técnicas de defensa.'] },
+            tecnicaBase: 'El Tribunal solicitará 10 agarres de base(por la derecha).\nLos agarres serán de ATEMI o PROYECCIÓN.',
+            tecnicaAplicada: { main: 'El candidato realizará 10 defensas ante los ataques solicitados por el tribunal (Anexo 6):', items: ['2 Atemi, 2 Frontales, 2 Laterales ,2 Dorsales y 2 Suelo.'] },
+            kata: { items: ['2 Kata obligatorios: Kata de Base (1º, 2º o 3º) elegido por el Tribunal y NTJ NO KATA SHODAN.'] },
+            randori: ['1 Randori en Círculo (6-8 atacantes).', '1 Randori demostración (1 minuto aprox.).']
+        },
+        {
+            id: '1dan', short: '1º Dan', title: 'GRADO: SHODAN (1º DAN)', isSenior: false,
+            admin: { edad: '16 años', licencias: '3 consecutivas ó 4 alternas y licencia del año en curso', gradoMinimo: '1 año de marrón', docs: baseDocsAval },
+            teoria: '6 preguntas, 2 sobre cada bloque (Fundamentos / Historia / Nomenclatura). Debe conocerse el temario de grados anteriores.',
+            kihonWaza: { main: 'Kihon Waza (Izq-Dcha):', items: ['Trabajo libre de 12 técnicas simples (Ataque + Tai Sabaki + 1 técnica).', 'Las técnicas podrán ser de golpeo, luxación, proyección o sutemi, estrangulación e inmovilización.', 'Deben contener los 8 Tai Sabakis de base.', 'La mitad (6) de las técnicas se realizarán por la izquierda, incluyendo 2 inmovilizaciones.', 'UKE atacará de atemi.', 'Se puede repetir el ataque pero NO las técnicas de defensa.'] },
+            tecnicaBase: 'El Tribunal solicitará 12 agarres de base (por la derecha).\nLos agarres serán de ATEMI, PROYECCIÓN o LUXACIÓN.',
+            tecnicaAplicada: { main: 'El candidato realizará 12 defensas ante los ataques solicitados por el tribunal (Anexo 6):', items: ['2 Atemi, 2 Frontales, 2 Laterales, 2 Dorsales, 2 Suelo, 2 Armas (tanto y tanbo).'] },
+            kata: { items: ['1 Kata voluntario: A elegir un Kata de Base (1º, 2º o 3º).', '1 Kata obligatorio: El Tribunal solicitará NTJ NO KATA SHODAN o KIHON KATA.'] },
+            randori: ['1 Randori en Círculo (6-8 atacantes: 16 a 39 años).', '1 Randori demostración (1 min aprox.: 16 a 54 años).', '> 55 exentos.']
+        },
+        {
+            id: '2dan', short: '2º Dan', title: 'GRADO: NIDAN (2º DAN)', isSenior: false,
+            admin: { edad: '18 años', licencias: '2 consecutivas ó 3 alternas (a partir de 1er dan) y licencia del año en curso', gradoMinimo: '2 años de Shodan', docs: baseDocsAval },
+            teoria: '9 preguntas, 3 sobre cada bloque (Fundamentos / Historia / Nomenclatura). Debe conocerse el temario de grados anteriores.',
+            kihonWaza: { main: 'Kihon Waza (por la derecha):', items: ['Trabajo libre de 8 técnicas simples (deben contener 8 Tai Sabakis, sin repetir defensas).','Las técnicas podrán ser de golpeo, luxación, proyección o sutemi, estrangulación e inmovilización.', '2 Series de KIHON WAZA elegidas por el candidato. Una interior y otra exterior.'] },
+            tecnicaBase: 'El Tribunal solicitará 12 agarres de base (por la izquierda).\nLos agarres serán de ATEMI, PROYECCIÓN o LUXACIÓN.',
+            tecnicaAplicada: { main: 'El candidato realizará 13 defensas ante los ataques solicitadas por el Tribunal (Anexo 6):', items: ['2 Atemi, 2 Frontales, 2 Laterales, 2 Dorsales, 2 Suelo, 3 Armas (tanto, tanbo, hanbo).'] },
+            kata: { items: ['2 Kata obligatorios: NIHON TAI JITSU NO KATA NIDAN y TAI SABAKI NO KATA.'] },
+            randori: ['1 Randori a 2 Ukes (18 a 39 años).', '1 Randori demostración (1\'15 min aprox.: 18 a 54 años).', '> 55 exentos.']
+        },
+        {
+            id: '3dan', short: '3º Dan', title: 'GRADO: SANDAN (3º DAN)', isSenior: false,
+            admin: { edad: '21 años.', licencias: '3 consecutivas ó 4 alternas (a partir de 2º dan) y licencia del año en curso.', gradoMinimo: '3 años de Nidan.', docs: baseDocsAval },
+            teoria: '12 preguntas, 4 sobre cada bloque (Fundamentos / Historia / Nomenclatura). Debe conocerse el temario de grados anteriores.',
+            kihonWaza: { main: 'Kihon Waza (Bilateral):', items: ['Serie de Sutemi, ejecutar seis primeros (Yoko Otoshi, Sumi Gaeshi, Kubi Mawashi, Yoko Guruma, Ude Gake Sutemi, Eri Tori Sutemi).'] },
+            tecnicaBase: 'Trabajo Libre de 3 defensas diferentes a las de los agarres de base (atemi, proyección y luxación).',
+            tecnicaAplicada: { main: '', items: ['13 defensas DE TRABAJO LIBRE (2 Atemi, 2 Frontales, 2 Laterales, 2 Dorsales, 2 Suelo, 3 Armas: Tanto, Tanbo, Hanbo).', '3 Encadenamientos sencillos (Ataque - defensa - reacción - defensa). Explicación lenta y luego ejecución normal.'] },
+            kata: { items: ['2 Kata voluntarios: A elegir entre NTJ NO KATA SANDAN, NTJ NO KATA YONDAN, JUNI NO KATA y DAI NI NO KATA (voluntario no exigible).'] },
+            randori: ['1 Randori a 2 Ukes (21-39 años) con ARMAS.', '1 Randori demostración (1\'15 min aprox.: 21 a 54 años).', '> 55 exentos.']
+        },
+        {
+            id: '4dan', short: '4º Dan', title: 'GRADO: YONDAN (4º DAN)', isSenior: false,
+            admin: { edad: '25 años.', licencias: '4 consecutivas ó 5 alternas (a partir de 3er dan) y licencia del año en curso.', gradoMinimo: '4 años de Sandan.', docs: [...baseDocs, 'CV deportivo-marcial.'] },
+            teoria: 'Coloquio con el tribunal sobre el Nihon Tai Jitsu y las Artes Marciales. Debe conocerse el temario de grados anteriores.',
+            kihonWaza: { main: 'Kihon Waza (Bilateral):', items: ['Serie de Sutemi (Tani Otoshi -2 formas-, Yoko Tomoe Nage, Yoko Wakare -2 formas-, Atama Guruma, Tobi Nori Sutemi).'] },
+            tecnicaBase: 'TRABAJO LIBRE (Máximo 10 min).',
+            tecnicaAplicada: { main: '', items: ['15 defensas DE TRABAJO LIBRE CONTRA ARMAS (5 ante TANTO, 5 ante TANBO, 5 ante HANBO).', '3 ENCADENAMIENTOS COMPLEJOS (Ataque - 1º defensa - 1º reacción - 2º defensa - 2º reacción - Defensa Definitiva). Explicación lenta y luego ejecución normal.'] },
+            kata: { items: ['2 Kata obligatorios: NTJ NO KATA GODAN (Atemi o Proyección) y HYORI NO KATA.'] },
+            randori: []
+        },
+        {
+            id: '5dan', short: '5º Dan', title: 'GRADO: GODAN (5º DAN)', isSenior: true,
+            admin: { edad: '30 años.', licencias: '5 consecutivas ó 6 alternas (a partir de 4º dan) y licencia del año en curso. 14 años de práctica federada desde 1er DAN.', gradoMinimo: '5 años de Yondan.', docs: [...baseDocs, 'CV deportivo-marcial.', 'Trabajo escrito 1 mes antes del examen.'] },
+            teoria: 'Exposición máxima: 10 minutos. Defensa del trabajo escrito presentado.',
+            kihonWazaBase: 'TRABAJO LIBRE (Duración máxima 10 min).',
+            tecnicaAplicada: { main: 'TRABAJO LIBRE (Duración máxima 10 min).', items: [] },
+            kata: { items: ['2 Kata obligatorios: NTJ NO KATA GODAN (Luxación o Sutemi) y KATA PERSONAL (Que deberá explicar).'] },
+            nota: 'Los trabajos de cada bloque deberán ser claramente diferenciados y no podrán estar basados en la misma temática.'
+        },
+        {
+            id: '6dan', short: '6º Dan', title: 'GRADO: ROKUDAN (6º DAN)', isSenior: true,
+            admin: { edad: '36 años', licencias: '6 consecutivas ó 7 alternas (a partir de 5º dan) y licencia del año en curso. 20 años de práctica federada desde 1er DAN.', gradoMinimo: '6 años de Godan.', docs: [...baseDocs, 'CV deportivo-marcial.', 'Trabajo escrito 1 mes antes del examen.'] },
+            teoria: 'Exposición máxima: 15 minutos. Defensa del trabajo escrito presentado.',
+            kihonWazaBase: 'TRABAJO LIBRE (Duración máxima 15 min).',
+            tecnicaAplicada: { main: 'TRABAJO LIBRE (Duración máxima 15 min).', items: [] },
+            kata: { items: ['1 Kata voluntario: Kata superior realizando una explicación detallada de los aspectos más importantes.'] },
+            nota: 'Los trabajos de cada bloque deberán ser claramente diferenciados y no podrán estar basados en la misma temática.'
+        },
+        {
+            id: '7dan', short: '7º Dan', title: 'GRADO: SHICHIDAN (7º DAN)', isSenior: true,
+            admin: { edad: '43 años', licencias: '7 consecutivas o 8 alternas (a partir de 6º dan) y licencia del año en curso. 27 años de práctica federada desde 1er DAN.', gradoMinimo: '7 años de Rokudan', docs: [...baseDocs, 'CV deportivo-marcial.', 'Trabajo escrito 1 mes antes del examen.'] },
+            teoria: 'Exposición máxima: 15 minutos. Defensa del trabajo escrito presentado.',
+            kihonWazaBase: 'TRABAJO LIBRE (Duración máxima 15 min).',
+            tecnicaAplicada: { main: 'TRABAJO LIBRE (Duración máxima 15 min).', items: [] },
+            kata: { items: ['Kata voluntario: 1 Kata de su elección (salvo Kata de Base) con explicación detallada.'] },
+            nota: 'Los trabajos de cada bloque deberán ser claramente diferenciados y no podrán estar basados en la misma temática.'
+        }
+    ];
+
+    let currentTab = 'cn';
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const row1 = document.getElementById('navRow1');
+        const row2 = document.getElementById('navRow2');
+        const modalGrid = document.getElementById('modalButtonsGrid');
+
+        // Distribuir botones: 5 en Fila 1, 4 en Fila 2
+        GRADES.forEach((g, idx) => {
+            const btnHTML = `<button id="btn_${g.id}" class="nav-btn" onclick="setTab('${g.id}')">${g.short}</button>`;
+            if (idx < 5) row1.innerHTML += btnHTML;
+            else row2.innerHTML += btnHTML;
+
+            modalGrid.innerHTML += `<button onclick="generatePDF('${g.id}')">${g.short}</button>`;
+        });
+        
+        row2.innerHTML += `<button id="btn_all" class="nav-btn" onclick="setTab('all')">Ver Todos</button>`;
+
+        setTab('cn');
+    });
+
+    function setTab(id) {
+        currentTab = id;
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(`btn_${id}`).classList.add('active');
+        renderContent();
+    }
+
+    function renderContent() {
+        const container = document.getElementById('mainContent');
+        container.innerHTML = '';
+
+        const targetGrades = currentTab === 'all' ? GRADES : [GRADES.find(g => g.id === currentTab)];
+
+        targetGrades.forEach(g => {
+            let html = `<div style="margin-bottom: 40px;">
+                <div class="grade-title">${g.title}</div>
+                
+                <div class="admin-card">
+                    <div class="admin-title" onclick="this.parentElement.classList.toggle('open')">
+                        <span class="toggle-arrow">▼</span>
+                        <span>1. Requisitos Administrativos</span>
+                        <span class="toggle-arrow">▼</span>
+                    </div>
+                    <div class="admin-content">
+                        <div style="margin-bottom:3px;"><strong>Edad Mínima:</strong> ${g.admin.edad}</div>
+                        <div style="margin-bottom:3px;"><strong>Licencias:</strong> ${g.admin.licencias}</div>
+                        <div style="margin-bottom:3px;"><strong>Grado mínimo anterior:</strong> ${g.admin.gradoMinimo}</div>
+                        <div style="margin-bottom:3px; margin-top:8px;"><strong>Documentación:</strong></div>
+                        <ul class="content-list">${g.admin.docs.map(d => `<li>${d}</li>`).join('')}</ul>
+                    </div>
+                </div>
+
+                <div class="section-block">
+                    <div class="section-title">${g.isSenior ? '2. Trabajo Escrito' : '2. Teoría'}</div>
+                    <div class="fw-normal">${g.teoria}</div>
+                </div>`;
+
+            if (g.isSenior) {
+                // UNIFICACIÓN 3 y 4 PARA GRADOS ALTOS (5º, 6º, 7º)
+                html += `
+                <div class="section-block">
+                    <div class="section-title">3. Kihon Waza / Técnica de Base</div>
+                    <div class="fw-normal">${g.kihonWazaBase}</div>
+                </div>
+                <div class="section-block">
+                    <div class="section-title">4. Técnica Aplicada</div>
+                    <div class="fw-normal">${g.tecnicaAplicada.main}</div>
+                </div>
+                <div class="section-block">
+                    <div class="section-title">5. Kata</div>
+                    <div class="fw-normal">
+                        <ul class="content-list" style="list-style-type: none; padding-left: 0;">
+                            ${g.kata.items.map(k => `<li>${k}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>`;
+            } else {
+                html += `
+                <div class="section-block">
+                    <div class="section-title">3. Kihon Waza</div>
+                    <div class="fw-normal">
+                        ${g.kihonWaza.main}
+                        ${g.kihonWaza.items.length ? `<ul class="content-list">${g.kihonWaza.items.map(i => `<li>${i}</li>`).join('')}</ul>` : ''}
+                    </div>
+                </div>
+                <div class="section-block">
+                    <div class="section-title">4. Técnica de Base</div>
+                    <div class="fw-normal">${g.tecnicaBase.replace('\n', '<br>')}</div>
+                </div>
+                <div class="section-block">
+                    <div class="section-title">5. Técnica Aplicada</div>
+                    <div class="fw-normal">
+                        ${g.tecnicaAplicada.main}
+                        ${g.tecnicaAplicada.items.length ? `<ul class="content-list">${g.tecnicaAplicada.items.map(i => `<li>${i}</li>`).join('')}</ul>` : ''}
+                    </div>
+                </div>
+                <div class="section-block">
+                    <div class="section-title">6. Kata</div>
+                    <div class="fw-normal">
+                        <ul class="content-list" style="list-style-type: none; padding-left: 0;">
+                            ${g.kata.items.map(k => `<li>${k}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>`;
+            }
+
+            if (g.randori && g.randori.length > 0) {
+                html += `
+                <div class="section-block">
+                    <div class="section-title">7. Randori</div>
+                    <div class="fw-normal">
+                        <ul class="content-list">${g.randori.map(r => `<li>${r}</li>`).join('')}</ul>
+                    </div>
+                </div>`;
+            }
+
+            let notaText = g.nota ? `(*) NOTA: ${g.nota}` : 'Programa Oficial de Examen';
+            html += `
+                <div style="border-top: 1px solid #d4d4d8; margin-top: 20px; padding-top: 10px; font-size: 0.8rem; color: #71717a; display: flex; justify-content: space-between;">
+                    <span>${notaText}</span>
+                    <span>Hoja Informativa — ${g.short}</span>
+                </div>
+            </div>`;
+
+            container.innerHTML += html;
+        });
+    }
+
+    function openModal() {
+        document.getElementById('pdfModal').style.setProperty('display', 'flex', 'important');
+    }
+
+    function closeModal() {
+        document.getElementById('pdfModal').style.setProperty('display', 'none', 'important');
+    }
+
+    async function generatePDF(type) {
+        closeModal();
+        const loader = document.getElementById('loaderOverlay');
+        const loaderText = document.getElementById('loaderText');
+        loader.style.setProperty('display', 'flex', 'important');
+
+        const pdfGrades = type === 'all' ? GRADES : GRADES.filter(g => g.id === type);
+        
+        const renderStage = document.createElement('div');
+        renderStage.style.cssText = "position: fixed; top: 0; left: 0; width: 794px; height: 1123px; background-color: #ffffff; padding: 40px; box-sizing: border-box; z-index: -1000; display: block;";
+        document.body.appendChild(renderStage);
+
+        try {
+            const doc = new jspdf.jsPDF('p', 'mm', 'a4');
+
+            for (let i = 0; i < pdfGrades.length; i++) {
+                const g = pdfGrades[i];
+                loaderText.textContent = `Procesando Página ${i + 1} de ${pdfGrades.length}...`;
+
+                // Construcción HTML para el PDF usando las URLs del PROXY
+                renderStage.innerHTML = `
+                    <div style="position: relative; width: 100%; height: 100%; display: flex; flex-direction: column;">
+                        <!-- MARCA DE AGUA PROXY -->
+                        <img src="https://wsrv.nl/?url=raw.githubusercontent.com/asturiasdiweb-wq/imagenes-programa-tecnico/main/logo-ntj.jpg" crossorigin="anonymous" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 450px; opacity: 0.08; z-index: 0;">
+                        
+                        <div style="position: relative; z-index: 1; flex: 1;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #09090b; padding-bottom: 15px; margin-bottom: 25px;">
+                                <div style="display: flex; gap: 15px;">
+                                    <img src="https://wsrv.nl/?url=raw.githubusercontent.com/asturiasdiweb-wq/imagenes-programa-tecnico/main/logo-ntj.jpg" crossorigin="anonymous" style="height: 50px; width: auto; object-fit: contain;">
+                                    <img src="https://wsrv.nl/?url=raw.githubusercontent.com/asturiasdiweb-wq/imagenes-programa-tecnico/main/logo-rfek.jpg" crossorigin="anonymous" style="height: 50px; width: auto; object-fit: contain;">
+                                    <img src="https://wsrv.nl/?url=raw.githubusercontent.com/asturiasdiweb-wq/imagenes-programa-tecnico/main/CSD%202026.JPG.jpeg" crossorigin="anonymous" style="height: 50px; width: auto; object-fit: contain;">
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="font-size: 20px; font-weight: 800; color: #09090b;">${g.title}</div>
+                                    <div style="font-size: 12px; color: #52525b; text-transform: uppercase;">Nihon Tai Jitsu 2025</div>
+                                </div>
+                            </div>
+
+                            <div style="background-color: #fef2f2; border: 1px solid #fca5a5; border-left: 5px solid #ef4444; color: #7f1d1d; padding: 10px 15px; border-radius: 4px; margin-bottom: 15px; font-size: 11px; line-height: 1.4;">
+                                <strong>⚠️ IMPORTANTE:</strong> Este documento es un resumen orientativo de la <strong>Normativa de Examen de Cinturón Negro - 2025</strong> para los grados de C.N. hasta 7º Dan. Este resumen <strong>no sustituye a la normativa oficial</strong> y, para conocer en detalle los requisitos de cada grado, debe consultarse el documento íntegro. Ante cualquier discrepancia, la Normativa Oficial de la RFEK es siempre el documento que prevalece.
+                            </div>
+
+                            <div style="background-color: #fffbeb; border-left: 5px solid #f59e0b; padding: 15px; margin-bottom: 20px; border-top: 1px solid #fde68a; border-right: 1px solid #fde68a; border-bottom: 1px solid #fde68a;">
+                                <div style="font-size: 14px; font-weight: 800; color: #92400e; text-transform: uppercase; margin-bottom: 5px;">1. Requisitos Administrativos</div>
+                                <div style="font-size: 13px; color: #451a03; line-height: 1.4;">
+                                    <div><strong>Edad Mínima:</strong> ${g.admin.edad}</div>
+                                    <div><strong>Licencias:</strong> ${g.admin.licencias}</div>
+                                    <div><strong>Grado mínimo anterior:</strong> ${g.admin.gradoMinimo}</div>
+                                    <div style="margin-top: 5px;"><strong>Documentación:</strong></div>
+                                    <ul style="margin: 3px 0 0 20px;">${g.admin.docs.map(d => `<li>${d}</li>`).join('')}</ul>
+                                </div>
+                            </div>
+
+                            ${buildPDFSections(g)}
+                        </div>
+                    </div>
+                `;
+
+                // Esperar a que las imágenes pasen por el proxy wsrv.nl antes de capturar
+                const imgs = renderStage.querySelectorAll('img');
+                await Promise.all(Array.from(imgs).map(img => {
+                    if (img.complete) return Promise.resolve();
+                    return new Promise(r => { img.onload = r; img.onerror = r; });
+                }));
+
+                await new Promise(r => setTimeout(r, 100)); // Pequeño margen para renderizado del DOM
+
+                const canvas = await html2canvas(renderStage, {
+                    scale: 2,
+                    useCORS: true,
+                    allowTaint: false,
+                    logging: false,
+                    width: 794,
+                    height: 1123,
+                    backgroundColor: "#ffffff"
+                });
+
+                if (i > 0) doc.addPage();
+                doc.addImage(canvas.toDataURL('image/jpeg', 1.0), 'JPEG', 0, 0, 210, 297);
+            }
+
+            const fileName = type === 'all' ? 'Normativa_Grados_NTJ_Completa.pdf' : `Normativa_Grados_NTJ_${pdfGrades[0].short.replace(' ', '_')}.pdf`;
+            doc.save(fileName);
+
+        } catch (error) {
+            console.error("Error PDF Export:", error);
+            // Replaced alert with a custom visual notification for safety
+            const errorBox = document.createElement('div');
+            errorBox.style.cssText = "position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #ef4444; color: white; padding: 15px 20px; border-radius: 8px; z-index: 10001; font-weight: bold;";
+            errorBox.innerText = "Error al generar PDF. Comprueba tu conexión a internet.";
+            document.body.appendChild(errorBox);
+            setTimeout(() => document.body.removeChild(errorBox), 4000);
+        } finally {
+            document.body.removeChild(renderStage);
+            loader.style.setProperty('display', 'none', 'important');
+        }
+    }
+
+    // Helper para mantener reglas de estilo (no negritas) en el PDF
+    function buildPDFSections(g) {
+        const hTitle = `font-size: 14px; font-weight: 800; color: #27272a; text-transform: uppercase; margin-bottom: 4px;`;
+        const hBody = `font-size: 13px; color: #18181b; font-weight: normal !important; margin-bottom: 15px; line-height: 1.4;`;
+        const hList = `margin: 3px 0 0 20px; padding: 0;`;
+
+        let html = `<div><div style="${hTitle}">${g.isSenior ? '2. Trabajo Escrito' : '2. Teoría'}</div><div style="${hBody}">${g.teoria}</div></div>`;
+
+        if (g.isSenior) {
+            html += `<div><div style="${hTitle}">3. Kihon Waza / Técnica de Base</div><div style="${hBody}">${g.kihonWazaBase}</div></div>`;
+            html += `<div><div style="${hTitle}">4. Técnica Aplicada</div><div style="${hBody}">${g.tecnicaAplicada.main}</div></div>`;
+            html += `<div><div style="${hTitle}">5. Kata</div><div style="${hBody}"><ul style="${hList}; list-style:none; margin-left:0;">${g.kata.items.map(k=>`<li>${k}</li>`).join('')}</ul></div></div>`;
+        } else {
+            let kItems = g.kihonWaza.items.length ? `<ul style="${hList}">${g.kihonWaza.items.map(i=>`<li>${i}</li>`).join('')}</ul>` : '';
+            html += `<div><div style="${hTitle}">3. Kihon Waza</div><div style="${hBody}">${g.kihonWaza.main}${kItems}</div></div>`;
+            html += `<div><div style="${hTitle}">4. Técnica de Base</div><div style="${hBody}">${g.tecnicaBase.replace('\n', '<br>')}</div></div>`;
+            let aItems = g.tecnicaAplicada.items.length ? `<ul style="${hList}">${g.tecnicaAplicada.items.map(i=>`<li>${i}</li>`).join('')}</ul>` : '';
+            html += `<div><div style="${hTitle}">5. Técnica Aplicada</div><div style="${hBody}">${g.tecnicaAplicada.main}${aItems}</div></div>`;
+            html += `<div><div style="${hTitle}">6. Kata</div><div style="${hBody}"><ul style="${hList}; list-style:none; margin-left:0;">${g.kata.items.map(k=>`<li>${k}</li>`).join('')}</ul></div></div>`;
+        }
+
+        if (g.randori && g.randori.length > 0) {
+            html += `<div><div style="${hTitle}">7. Randori</div><div style="${hBody}"><ul style="${hList}">${g.randori.map(r=>`<li>${r}</li>`).join('')}</ul></div></div>`;
+        }
+
+        let notaText = g.nota ? `(*) NOTA: ${g.nota}` : 'Programa Oficial de Examen';
+        html += `<div style="margin-top: auto; border-top: 1px solid #d4d4d8; padding-top: 15px; font-size: 11px; color: #71717a; display: flex; justify-content: space-between; position: absolute; bottom: 0; width: 100%;"><span>${notaText}</span><span>Hoja Informativa — ${g.short}</span></div>`;
+
+        return html;
+    }
+</script>
+
+</body>
+</html>
